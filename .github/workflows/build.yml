@@ -27,28 +27,67 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli@latest
+      - name: Install Bubblewrap with legacy peer deps
+        run: |
+          npm install -g @bubblewrap/cli@latest --legacy-peer-deps
+          npm install -g @bubblewrap/core@latest --legacy-peer-deps
 
-      - name: Generate TWA project directly from manifest JSON
+      - name: Create bubblewrap config to skip JDK prompt
+        run: |
+          mkdir -p $HOME/.bubblewrap
+          cat > $HOME/.bubblewrap/config.json << EOF
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          EOF
+          echo "Bubblewrap config created:"
+          cat $HOME/.bubblewrap/config.json
+
+      - name: Generate TWA Android project
         run: |
           mkdir -p twa-project
           cp twa-manifest.json twa-project/twa-manifest.json
           cd twa-project
-          bubblewrap build \
-            --skipPwaValidation \
-            --manifest twa-manifest.json
+          # Use --yes flag and pipe input to bypass all prompts
+          yes "" | bubblewrap init \
+            --manifest https://marku.in/superpwa-manifest.json \
+            --directory . \
+            --skipPwaValidation 2>&1 || true
+          echo "Init completed"
+          ls -la
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+          CI: true
+          BUBBLEWRAP_DISABLE_TELEMETRY: 1
+
+      - name: Build with Gradle directly
+        run: |
+          cd twa-project
+          if [ -f "gradlew" ]; then
+            chmod +x gradlew
+            ./gradlew assembleRelease --no-daemon
+          else
+            echo "No gradlew found, listing files:"
+            ls -la
+            exit 1
+          fi
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
           JAVA_HOME: ${{ env.JAVA_HOME }}
 
-      - name: Upload APK
+      - name: Find and upload APK
+        run: |
+          echo "Searching for APK files:"
+          find twa-project -name "*.apk" -o -name "*.aab" 2>/dev/null
+        
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: marku-apk
           path: |
-            twa-project/app-release-signed.apk
-            twa-project/app-release-bundle.aab
-            twa-project/app-release.apk
+            twa-project/app/build/outputs/apk/release/*.apk
+            twa-project/app/build/outputs/bundle/release/*.aab
           retention-days: 30
           if-no-files-found: warn
