@@ -5,9 +5,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,31 +27,40 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli@latest
 
-      - name: Create TWA project from manifest
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configure Bubblewrap to skip JDK install
+        run: |
+          mkdir -p ~/.bubblewrap
+          cat > ~/.bubblewrap/config.json << 'EOF'
+          {
+            "jdkPath": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17*/x64",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          EOF
+
+      - name: Create TWA project
         run: |
           mkdir -p twa-project
-          cp twa-manifest.json twa-project/twa-manifest.json
           cd twa-project
-          bubblewrap init \
+          echo "no" | bubblewrap init \
             --manifest https://marku.in/superpwa-manifest.json \
-            --directory . \
-            --skipPwaValidation \
-            --packageId in.marku.app \
-            --name "MarkU Life Design Academy" \
-            --launcherName "MarkU" \
-            --themeColor "#0e8f84" \
-            --backgroundColor "#e8f7f5" \
-            --startUrl "/dashboard/" \
-            --iconUrl "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png" \
-            --maskableIconUrl "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png" \
-            --appVersion "1.0.0" \
-            --appVersionCode 1 \
-            --signingMode none
+            --skipPwaValidation
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+
+      - name: Copy custom twa-manifest
+        run: cp twa-manifest.json twa-project/twa-manifest.json
 
       - name: Build APK
         run: |
           cd twa-project
           bubblewrap build --skipPwaValidation
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
