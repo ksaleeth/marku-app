@@ -24,40 +24,20 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli@latest
-
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Configure Bubblewrap to skip JDK install
-        run: |
-          mkdir -p ~/.bubblewrap
-          cat > ~/.bubblewrap/config.json << 'EOF'
-          {
-            "jdkPath": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17*/x64",
-            "androidSdkPath": "$ANDROID_HOME"
-          }
-          EOF
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli@latest
 
-      - name: Create TWA project
+      - name: Generate TWA project directly from manifest JSON
         run: |
           mkdir -p twa-project
+          cp twa-manifest.json twa-project/twa-manifest.json
           cd twa-project
-          echo "no" | bubblewrap init \
-            --manifest https://marku.in/superpwa-manifest.json \
-            --skipPwaValidation
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-
-      - name: Copy custom twa-manifest
-        run: cp twa-manifest.json twa-project/twa-manifest.json
-
-      - name: Build APK
-        run: |
-          cd twa-project
-          bubblewrap build --skipPwaValidation
+          bubblewrap build \
+            --skipPwaValidation \
+            --manifest twa-manifest.json
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
           JAVA_HOME: ${{ env.JAVA_HOME }}
