@@ -11,13 +11,13 @@
   "navigationDividerColor": "#0e8f84",
   "navigationDividerColorDark": "#0e8f84",
   "backgroundColor": "#e8f7f5",
-  "enableNotifications": false,
+  "enableNotifications": true,
   "startUrl": "/dashboard/",
   "iconUrl": "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png",
   "maskableIconUrl": "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png",
   "monochromeIconUrl": "https://marku.in/wp-content/uploads/2026/01/cropped-Copy-of-MarkU-Logo_20260128_203438_0000.png",
-  "appVersion": "1.0.0",
-  "appVersionCode": 1,
+  "appVersion": "2.0.1",
+  "appVersionCode": 5,
   "signingMode": "none",
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://marku.in/superpwa-manifest.json",
@@ -36,7 +36,16 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fingerprints": [],
+  "fingerprints": [
+    {
+      "name": "Play App Signing",
+      "value": "9B:9D:74:37:24:F4:0E:4E:3D:CA:DD:82:B0:E3:B6:0C:12:45:7D:7E:E0:D1:EB:EE:27:BF:FA:41:E4:CC:DA:42"
+    },
+    {
+      "name": "Second key (already in assetlinks)",
+      "value": "86:47:3A:A3:E0:B2:8B:DD:70:24:C1:15:F9:A1:88:F9:85:58:DB:C8:E3:2F:D0:1B:75:54:CB:70:51:78:8C:95"
+    }
+  ],
   "serviceAccountJsonFile": "",
   "shortcuts": [
     {
@@ -45,5 +54,6 @@
       "url": "/dashboard/",
       "chosenIconUrl": "https://marku.in/wp-content/uploads/2026/02/20260217_115635_0000.png"
     }
-  ]
+  ],
+  "minSdkVersion": 21
 }

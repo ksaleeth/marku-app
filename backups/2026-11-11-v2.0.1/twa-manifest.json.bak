@@ -1,0 +1,49 @@
+{
+  "packageId": "in.marku.app",
+  "host": "marku.in",
+  "name": "MarkU Life Design Academy",
+  "launcherName": "MarkU",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#0e8f84",
+  "navigationColor": "#0e8f84",
+  "navigationColorDark": "#0e8f84",
+  "navigationDividerColor": "#0e8f84",
+  "navigationDividerColorDark": "#0e8f84",
+  "backgroundColor": "#e8f7f5",
+  "enableNotifications": false,
+  "startUrl": "/dashboard/",
+  "iconUrl": "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png",
+  "maskableIconUrl": "https://marku.in/wp-content/uploads/2026/02/Copy-of-MarkU-Logo_20260216_182756_0000.png",
+  "monochromeIconUrl": "https://marku.in/wp-content/uploads/2026/01/cropped-Copy-of-MarkU-Logo_20260128_203438_0000.png",
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "signingMode": "none",
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://marku.in/superpwa-manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fingerprints": [],
+  "serviceAccountJsonFile": "",
+  "shortcuts": [
+    {
+      "name": "MarkU",
+      "shortName": "MarkU",
+      "url": "/dashboard/",
+      "chosenIconUrl": "https://marku.in/wp-content/uploads/2026/02/20260217_115635_0000.png"
+    }
+  ]
+}
